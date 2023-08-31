@@ -1,0 +1,44 @@
+def is_valid_position(x, y, board_size):
+    return 0 <= x < board_size and 0 <= y < board_size
+
+def generate_moves(x, y):
+    return [(x + 1, y + 1), (x + 1, y - 1)]
+
+def depth_first_search(start, goal, board_size):
+    stack = [(start, [])]
+    visited = set()
+
+    while stack:
+        current_position, path = stack.pop()
+        x, y = current_position
+
+        if current_position == goal:
+            return path + [goal]
+
+        if current_position in visited:
+            continue
+
+        visited.add(current_position)
+
+        for new_x, new_y in generate_moves(x, y):
+            if is_valid_position(new_x, new_y, board_size):
+                stack.append(((new_x, new_y), path + [current_position]))
+
+    return None
+
+def main():
+    board_size = int(input("Enter board size: "))
+    start_position = tuple(map(int, input("Enter start position (x y): ").split()))
+    goal_position = tuple(map(int, input("Enter goal position (x y): ").split()))
+
+    if is_valid_position(*start_position, board_size) and is_valid_position(*goal_position, board_size):
+        path = depth_first_search(start_position, goal_position, board_size)
+        if path:
+            print("Path found:", path)
+        else:
+            print("No path found.")
+    else:
+        print("Invalid positions.")
+
+if __name__ == "__main__":
+    main()
